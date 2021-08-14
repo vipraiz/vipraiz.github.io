@@ -9,7 +9,7 @@ var_dump($_GET);
 $c = true;
 if ( $method === 'POST' ) {
 	$project_name = "sneakmax";
-	$admin_email  = "3axepka2001@mail.ru";
+	$admin_email  = "adress@mail.ru";
 	$form_subject = "Hi";
 
 	foreach ( $_POST as $key => $value ) {
