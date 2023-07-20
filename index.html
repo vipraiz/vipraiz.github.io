@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каркассон - счётчик тайлов</title>
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="header-wrapper">
+                <div class="tile-amount">
+                    Тайлов осталось: <span>71</span>
+                </div>
+                <div class="summed-probability d-none" data-after="0 тайлов"><span>0.00</span>%</div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="control">
+                <div class="control-item">
+                    <input type="checkbox" id="show-probabilities">
+                    <label for="show-probabilities">Показывать вероятности</label>
+                </div>
+                <div class="control-item d-none">
+                    <div class="control-item">
+                        <input type="checkbox" id="sum-probabilities-checkbox">
+                        <label for="sum-probabilities-checkbox">Суммирование вероятностей</label>
+                    </div>
+                    <button class="reset-selection-btn" disabled="">Сбросить выделение</button>
+                </div>
+            </div>
+            <div class="tiles">
+                <div id="tile-A" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--A"></div>
+                        <div class="tile-counter"><span max="2">2</span>/2</div>
+                    </div>
+                </div>
+                <div id="tile-B" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--B"></div>
+                        <div class="tile-counter"><span max="4">4</span>/4</div>
+                    </div>
+                </div>
+                <div id="tile-C" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--C"></div>
+                        <div class="tile-counter"><span max="1">1</span>/1</div>
+                    </div>
+                </div>
+                <div id="tile-D" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--D"></div>
+                        <div class="tile-counter"><span max="3">3</span>/3</div>
+                    </div>
+                </div>
+                <div id="tile-E" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--E"></div>
+                        <div class="tile-counter"><span max="5">5</span>/5</div>
+                    </div>
+                </div>
+                <div id="tile-F" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--F"></div>
+                        <div class="tile-counter"><span max="2">2</span>/2</div>
+                    </div>
+                </div>
+                <div id="tile-G" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--G"></div>
+                        <div class="tile-counter"><span max="1">1</span>/1</div>
+                    </div>
+                </div>
+                <div id="tile-H" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--H"></div>
+                        <div class="tile-counter"><span max="3">3</span>/3</div>
+                    </div>
+                </div>
+                <div id="tile-I" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--I"></div>
+                        <div class="tile-counter"><span max="2">2</span>/2</div>
+                    </div>
+                </div>
+                <div id="tile-J" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--J"></div>
+                        <div class="tile-counter"><span max="3">3</span>/3</div>
+                    </div>
+                </div>
+                <div id="tile-K" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--K"></div>
+                        <div class="tile-counter"><span max="3">3</span>/3</div>
+                    </div>
+                </div>
+                <div id="tile-L" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--L"></div>
+                        <div class="tile-counter"><span max="3">3</span>/3</div>
+                    </div>
+                </div>
+                <div id="tile-M" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--M"></div>
+                        <div class="tile-counter"><span max="2">2</span>/2</div>
+                    </div>
+                </div>
+                <div id="tile-N" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--N"></div>
+                        <div class="tile-counter"><span max="3">3</span>/3</div>
+                    </div>
+                </div>
+                <div id="tile-O" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--O"></div>
+                        <div class="tile-counter"><span max="2">2</span>/2</div>
+                    </div>
+                </div>
+                <div id="tile-P" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--P"></div>
+                        <div class="tile-counter"><span max="3">3</span>/3</div>
+                    </div>
+                </div>
+                <div id="tile-Q" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--Q"></div>
+                        <div class="tile-counter"><span max="1">1</span>/1</div>
+                    </div>
+                </div>
+                <div id="tile-R" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--R"></div>
+                        <div class="tile-counter"><span max="3">3</span>/3</div>
+                    </div>
+                </div>
+                <div id="tile-S" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--S"></div>
+                        <div class="tile-counter"><span max="2">2</span>/2</div>
+                    </div>
+                </div>
+                <div id="tile-T" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--T"></div>
+                        <div class="tile-counter"><span max="1">1</span>/1</div>
+                    </div>
+                </div>
+                <div id="tile-U" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--U"></div>
+                        <div class="tile-counter"><span max="8">8</span>/8</div>
+                    </div>
+                </div>
+                <div id="tile-V" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--V"></div>
+                        <div class="tile-counter"><span max="9">9</span>/9</div>
+                    </div>
+                </div>
+                <div id="tile-W" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--W"></div>
+                        <div class="tile-counter"><span max="4">4</span>/4</div>
+                    </div>
+                </div>
+                <div id="tile-X" class="tile">
+                    <div class="tile-probability d-none">
+                        <div>
+                            <span>?</span>%
+                        </div>
+                        <input type="checkbox" class="tile-checkbox d-none">
+                    </div>
+                    <div class="tile-clickable" tabindex="0">
+                        <div class="tile-image first_edition tile-image--X"></div>
+                        <div class="tile-counter"><span max="1">1</span>/1</div>
+                    </div>
+                </div>
+            </div>
+            <div class="history">
+                <h5>История</h5>
+                <button class="back-btn" disabled="">Назад</button>
+                <div class="history__tiles tiles"></div>
+            </div>
+        </div>
+    </main>
+    <script src="js/main.js"></script>
+
+
+</body>
+</html>
