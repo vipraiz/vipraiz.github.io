@@ -3,26 +3,33 @@ const sumProbabilitiesCheckbox = document.querySelector(
   "#sum-probabilities-checkbox"
 );
 const summedProbability = document.querySelector(".summed-probability span");
+const summedProbabilityYou = document.querySelector(
+  ".summed-probability-you span"
+);
 const tilesElement = document.querySelector(".tiles");
 const tiles = tilesElement.querySelectorAll(".tile");
 const tileAmountElement = document.querySelector(".tile-amount span");
 const tilesHistoryElement = document.querySelector(".history__tiles");
-const resetSelectionBtn = document.querySelector('.reset-selection-btn');
+const resetSelectionBtn = document.querySelector(".reset-selection-btn");
 const backBtn = document.querySelector(".back-btn");
+const tooltips = document.querySelector(".tooltips");
 
 probabilityCheckbox.addEventListener("change", (event) => {
-  const tileProbabilityElements =
-    tilesElement.querySelectorAll(".tile-probability");
+  const tileProbabilityElements = tilesElement.querySelectorAll(
+    ".tile-probabilities"
+  );
   if (event.currentTarget.checked) {
     caclProbabilities();
     sumProbabilitiesCheckbox.parentNode.parentNode.classList.remove("d-none");
+    tooltips.classList.remove("d-none");
     tileProbabilityElements.forEach((el) => {
       el.classList.remove("d-none");
     });
   } else {
-    summedProbability.parentNode.classList.add("d-none");
+    summedProbability.parentNode.parentNode.classList.add("d-none");
     sumProbabilitiesCheckbox.checked = false;
     sumProbabilitiesCheckbox.parentNode.parentNode.classList.add("d-none");
+    tooltips.classList.add("d-none");
     tileProbabilityElements.forEach((el) => {
       el.classList.add("d-none");
     });
@@ -34,12 +41,12 @@ const tileProbabilityElements = tilesElement.querySelectorAll(".tile-checkbox");
 
 sumProbabilitiesCheckbox.addEventListener("change", (event) => {
   if (event.currentTarget.checked) {
-    summedProbability.parentNode.classList.remove("d-none");
+    summedProbability.parentNode.parentNode.classList.remove("d-none");
     tileProbabilityElements.forEach((el) => {
       el.classList.remove("d-none");
     });
   } else {
-    summedProbability.parentNode.classList.add("d-none");
+    summedProbability.parentNode.parentNode.classList.add("d-none");
     foo();
   }
 });
@@ -54,18 +61,18 @@ tilesElement.addEventListener("click", (event) => {
 
   if (event.target.classList.contains("tile-checkbox")) {
     if (event.target.checked) {
-      event.target.closest('.tile').classList.add('tile--selected');
+      event.target.closest(".tile").classList.add("tile--selected");
       count_checked++;
       sumProbabilities();
       if (count_checked == 1) {
-        resetSelectionBtn.removeAttribute('disabled');
+        resetSelectionBtn.removeAttribute("disabled");
         summedProbability.parentNode.classList.remove("d-none");
       }
     } else {
-      event.target.closest('.tile').classList.remove('tile--selected');
+      event.target.closest(".tile").classList.remove("tile--selected");
       count_checked--;
       if (count_checked == 0) {
-        resetSelectionBtn.setAttribute('disabled', 'disabled');
+        resetSelectionBtn.setAttribute("disabled", "disabled");
       }
       sumProbabilities();
     }
@@ -74,8 +81,8 @@ tilesElement.addEventListener("click", (event) => {
   if (tile.classList.contains("tile--over")) return;
 
   if (parent_element.classList.contains("tile-clickable")) {
-    if(tile_amount == 71) {
-      backBtn.removeAttribute('disabled');
+    if (tile_amount == 71) {
+      backBtn.removeAttribute("disabled");
     }
     if (tile_amount < 71) {
       tile_last.classList.remove("tile--last");
@@ -90,7 +97,7 @@ tilesElement.addEventListener("click", (event) => {
       tile_counter.parentElement.classList.add("italic");
       const image = document.createElement("div");
       const name = tile.id.slice(-1);
-      image.classList.add('tile-image', 'first_edition', `tile-image--${name}`);
+      image.classList.add("tile-image", "first_edition", `tile-image--${name}`);
       image.setAttribute("name", name);
       tilesHistoryElement.prepend(image);
       if (tile_counter.textContent == 0) {
@@ -124,8 +131,12 @@ function sumProbabilities() {
     }
   });
   summedProbability.parentNode.classList.remove("d-none");
-  summedProbability.textContent = tile_amount > 0 ? ((sum / tile_amount) * 100).toFixed(2) : '0.00';
-  summedProbability.parentNode.setAttribute(
+  summedProbability.textContent =
+    tile_amount > 0 ? ((sum / tile_amount) * 100).toFixed(2) : "0.00";
+  summedProbabilityYou.textContent = ((1 - 1 / Math.pow(2, sum)) * 100).toFixed(
+    2
+  );
+  summedProbability.parentNode.parentNode.setAttribute(
     "data-after",
     `${sum} ${declOfNum(sum, ["тайл", "тайла", "тайлов"])}`
   );
@@ -147,8 +158,8 @@ backBtn.addEventListener("click", () => {
     if (tile_counter.textContent < max_value) {
       tile_counter.textContent = Number(tile_counter.textContent) + 1;
       tileAmountElement.textContent = tile_amount += 1;
-      if(tile_amount == 71) {
-        backBtn.setAttribute('disabled', 'disabled');
+      if (tile_amount == 71) {
+        backBtn.setAttribute("disabled", "disabled");
       }
       if (tile_counter.textContent == max_value) {
         tile_counter.parentElement.classList.remove("italic");
@@ -176,11 +187,15 @@ backBtn.addEventListener("click", () => {
 
 function foo(hide = false) {
   count_checked = 0;
-  resetSelectionBtn.setAttribute('disabled', 'disabled');
+  resetSelectionBtn.setAttribute("disabled", "disabled");
   summedProbability.textContent = "0.00";
-  summedProbability.parentNode.setAttribute("data-after", "0 тайлов");
+  summedProbabilityYou.textContent = "0.00";
+  summedProbability.parentNode.parentNode.setAttribute(
+    "data-after",
+    "0 тайлов"
+  );
   tileProbabilityElements.forEach((el) => {
-    el.closest('.tile').classList.remove('tile--selected');
+    el.closest(".tile").classList.remove("tile--selected");
     el.checked = false;
     if (typeof hide == "boolean") {
       el.classList.add("d-none");
@@ -189,15 +204,33 @@ function foo(hide = false) {
 }
 
 function caclProbabilities() {
-  if (tile_amount == 0) return;
-  tiles.forEach((tile) => {
-    const tileProbability = tile.querySelector(".tile-probability span");
-    const tileCounter = tile.querySelector(".tile-counter span");
-    tileProbability.textContent = (
-      (tileCounter.textContent / tile_amount) *
-      100
-    ).toFixed(2);
-  });
+  if (tile_amount == 0) {
+    tiles.forEach((tile) => {
+      const tileProbability = tile.querySelector(".tile-probability span");
+      const tileProbabilityYou = tile.querySelector(
+        ".tile-probability-you span"
+      );
+      const tileCounter = tile.querySelector(".tile-counter span");
+      tileProbability.textContent = "0.00";
+      tileProbabilityYou.textContent = "0.00";
+    });
+  } else {
+    tiles.forEach((tile) => {
+      const tileProbability = tile.querySelector(".tile-probability span");
+      const tileProbabilityYou = tile.querySelector(
+        ".tile-probability-you span"
+      );
+      const tileCounter = tile.querySelector(".tile-counter span");
+      tileProbability.textContent = (
+        (tileCounter.textContent / tile_amount) *
+        100
+      ).toFixed(2);
+      tileProbabilityYou.textContent = (
+        (1 - 1 / Math.pow(2, tileCounter.textContent)) *
+        100
+      ).toFixed(2);
+    });
+  }
 }
 
 function declOfNum(number, words) {

@@ -12,7 +12,7 @@
 header {
   position: fixed;
   /* background-color: rgba(255, 255, 255, 0.95); */
-  background-color: rgba(255,255,255,.9);
+  background-color: rgba(255, 255, 255, 0.9);
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   padding: 15px 0;
@@ -97,20 +97,58 @@ main {
   user-select: none;
 }
 
-.tile-probability {
-  color: green;
-  font-size: 16px;
+.tile-probabilities__wrapper {
   display: flex;
   justify-content: space-around;
   align-items: center;
 }
 
-.summed-probability {
+.tile-probability {
+  color: rgb(114, 172, 0);
+  font-size: 13px;
+}
+
+.tooltip::before {
+  content: "*";
+  position: absolute;
+  left: 0;
+}
+
+.tooltip {
+  position: relative;
+  padding-left: 0.66em;
+}
+
+.tooltip-tile-probability-you {
   color: green;
+}
+
+.tooltip-tile-probability {
+  color: rgb(114, 172, 0);
+}
+
+.tile-probability-you {
+  color: green;
+  font-size: 16px;
+}
+
+.top-probabilities {
+  display: flex;
   position: relative;
 }
 
-.summed-probability::after {
+.summed-probability {
+  color: rgb(114, 172, 0);
+  font-size: 13px;
+  margin-right: 0.33em;
+  align-self: center;
+}
+
+.summed-probability-you {
+  color: green;
+}
+
+.top-probabilities::after {
   content: attr(data-after);
   position: absolute;
   font-size: 12px;
@@ -165,7 +203,6 @@ h5 {
   background-image: url(../img/tiles/tiles_first_edition.png);
   background-size: 2300% 400%;
 }
-
 
 .tile-image--D {
   background-position: 68.1818% 0%;
