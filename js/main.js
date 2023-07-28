@@ -13,6 +13,30 @@ const tilesHistoryElement = document.querySelector(".history__tiles");
 const resetSelectionBtn = document.querySelector(".reset-selection-btn");
 const backBtn = document.querySelector(".back-btn");
 const tooltips = document.querySelector(".tooltips");
+const numPlayersElement = document.querySelector("#num_players");
+
+let num_of_tiles = 71;
+let remains_to_pull = [36, 35, 0, 0, 0, 0];
+let numOfPlayers = 2;
+let active_player_id = 0;
+
+numPlayersElement.addEventListener("change", () => {
+  if (numPlayersElement.value < 2 || numPlayersElement.value > 6) return;
+  numOfPlayers = Number(numPlayersElement.value);
+  bar();
+  caclProbabilities();
+  sumProbabilities();
+});
+
+function bar() {
+  for(let i = 0; i < 6; i++) {
+    if (i >= numOfPlayers) {
+      remains_to_pull[i] = 0;
+      continue;
+    }
+    remains_to_pull[i] = Math.floor(num_of_tiles / numOfPlayers) + (i < num_of_tiles % numOfPlayers ? 1 : 0);
+  };
+}
 
 probabilityCheckbox.addEventListener("change", (event) => {
   const tileProbabilityElements = tilesElement.querySelectorAll(
@@ -21,6 +45,7 @@ probabilityCheckbox.addEventListener("change", (event) => {
   if (event.currentTarget.checked) {
     caclProbabilities();
     sumProbabilitiesCheckbox.parentNode.parentNode.classList.remove("d-none");
+    numPlayersElement.parentNode.classList.remove("d-none");
     tooltips.classList.remove("d-none");
     tileProbabilityElements.forEach((el) => {
       el.classList.remove("d-none");
@@ -29,6 +54,7 @@ probabilityCheckbox.addEventListener("change", (event) => {
     summedProbability.parentNode.parentNode.classList.add("d-none");
     sumProbabilitiesCheckbox.checked = false;
     sumProbabilitiesCheckbox.parentNode.parentNode.classList.add("d-none");
+    numPlayersElement.parentNode.classList.add("d-none");
     tooltips.classList.add("d-none");
     tileProbabilityElements.forEach((el) => {
       el.classList.add("d-none");
@@ -51,7 +77,7 @@ sumProbabilitiesCheckbox.addEventListener("change", (event) => {
   }
 });
 
-let tile_amount = 71;
+let tile_amount = num_of_tiles;
 let tile_last;
 let count_checked = 0;
 
@@ -81,10 +107,10 @@ tilesElement.addEventListener("click", (event) => {
   if (tile.classList.contains("tile--over")) return;
 
   if (parent_element.classList.contains("tile-clickable")) {
-    if (tile_amount == 71) {
+    if (tile_amount == num_of_tiles) {
       backBtn.removeAttribute("disabled");
     }
-    if (tile_amount < 71) {
+    if (tile_amount < num_of_tiles) {
       tile_last.classList.remove("tile--last");
     }
     tile_last = parent_element;
@@ -94,6 +120,12 @@ tilesElement.addEventListener("click", (event) => {
     if (tile_counter.textContent > 0) {
       tile_counter.textContent = tile_counter.textContent - 1;
       tileAmountElement.textContent = tile_amount -= 1;
+      // if (numOfPlayers % (active_player_id + 2)) {
+      //   active_player_id = 0;
+      // } else {
+      //   active_player_id++;
+      // }
+      // console.log(active_player_id);
       tile_counter.parentElement.classList.add("italic");
       const image = document.createElement("div");
       const name = tile.id.slice(-1);
@@ -133,9 +165,10 @@ function sumProbabilities() {
   summedProbability.parentNode.classList.remove("d-none");
   summedProbability.textContent =
     tile_amount > 0 ? ((sum / tile_amount) * 100).toFixed(2) : "0.00";
-  summedProbabilityYou.textContent = ((1 - 1 / Math.pow(2, sum)) * 100).toFixed(
-    2
-  );
+  summedProbabilityYou.textContent = (
+    (1 - (numOfPlayers - 1) / (Math.pow(2, sum) + numOfPlayers - 2)) *
+    100
+  ).toFixed(2);
   summedProbability.parentNode.parentNode.setAttribute(
     "data-after",
     `${sum} ${declOfNum(sum, ["тайл", "тайла", "тайлов"])}`
@@ -158,7 +191,8 @@ backBtn.addEventListener("click", () => {
     if (tile_counter.textContent < max_value) {
       tile_counter.textContent = Number(tile_counter.textContent) + 1;
       tileAmountElement.textContent = tile_amount += 1;
-      if (tile_amount == 71) {
+      // active_player_id -= 1;
+      if (tile_amount == num_of_tiles) {
         backBtn.setAttribute("disabled", "disabled");
       }
       if (tile_counter.textContent == max_value) {
@@ -210,7 +244,6 @@ function caclProbabilities() {
       const tileProbabilityYou = tile.querySelector(
         ".tile-probability-you span"
       );
-      const tileCounter = tile.querySelector(".tile-counter span");
       tileProbability.textContent = "0.00";
       tileProbabilityYou.textContent = "0.00";
     });
@@ -226,7 +259,9 @@ function caclProbabilities() {
         100
       ).toFixed(2);
       tileProbabilityYou.textContent = (
-        (1 - 1 / Math.pow(2, tileCounter.textContent)) *
+        (1 -
+          (numOfPlayers - 1) /
+            (Math.pow(2, tileCounter.textContent) + numOfPlayers - 2)) *
         100
       ).toFixed(2);
     });
