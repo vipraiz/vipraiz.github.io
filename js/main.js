@@ -14,19 +14,36 @@ const resetSelectionBtn = document.querySelector(".reset-selection-btn");
 const backBtn = document.querySelector(".back-btn");
 const tooltips = document.querySelector(".tooltips");
 const numPlayersElement = document.querySelector("#num_players");
+const probabilitiesForElement = document.querySelector("#probabilities_for");
 const activePlayerElement = document.querySelector(".active_player span");
 
 let num_of_tiles = 71;
 let remains_to_pull = [36, 35, 0, 0, 0, 0];
 let numOfPlayers = 2;
 let active_player_id = 0;
+let probabilities_for = 0;
 
 numPlayersElement.addEventListener("change", () => {
   if (numPlayersElement.value < 2 || numPlayersElement.value > 6) return;
   numOfPlayers = Number(numPlayersElement.value);
   bar();
-  caclProbabilities();
-  sumProbabilities();
+  caclProbabilities(probabilities_for);
+  sumProbabilities(probabilities_for);
+  probabilitiesForElement.innerHTML = '<option value="-1">активного игрока</option>';
+  for(let i = 0; i < numOfPlayers; i++) {
+    const opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = i + 1 + '-ого игрока';
+    probabilitiesForElement.appendChild(opt);  
+  }
+  probabilities_for = active_player_id;
+});
+
+probabilitiesForElement.addEventListener("change", () => {
+  if (probabilitiesForElement.value < -1 || probabilitiesForElement.value > 5) return;
+  probabilities_for = probabilitiesForElement.value == -1 ? null : Number(probabilitiesForElement.value);
+  caclProbabilities(probabilities_for);
+  sumProbabilities(probabilities_for);
 });
 
 function bar() {
@@ -46,9 +63,10 @@ probabilityCheckbox.addEventListener("change", (event) => {
     ".tile-probabilities"
   );
   if (event.currentTarget.checked) {
-    caclProbabilities();
+    caclProbabilities(probabilities_for);
     sumProbabilitiesCheckbox.parentNode.parentNode.classList.remove("d-none");
     numPlayersElement.parentNode.classList.remove("d-none");
+    probabilitiesForElement.parentNode.classList.remove('d-none');
     tooltips.classList.remove("d-none");
     tileProbabilityElements.forEach((el) => {
       el.classList.remove("d-none");
@@ -58,6 +76,7 @@ probabilityCheckbox.addEventListener("change", (event) => {
     sumProbabilitiesCheckbox.checked = false;
     sumProbabilitiesCheckbox.parentNode.parentNode.classList.add("d-none");
     numPlayersElement.parentNode.classList.add("d-none");
+    probabilitiesForElement.parentNode.classList.add("d-none");
     tooltips.classList.add("d-none");
     tileProbabilityElements.forEach((el) => {
       el.classList.add("d-none");
@@ -92,7 +111,7 @@ tilesElement.addEventListener("click", (event) => {
     if (event.target.checked) {
       event.target.closest(".tile").classList.add("tile--selected");
       count_checked++;
-      sumProbabilities();
+      sumProbabilities(probabilities_for);
       if (count_checked == 1) {
         resetSelectionBtn.removeAttribute("disabled");
         summedProbability.parentNode.classList.remove("d-none");
@@ -103,7 +122,7 @@ tilesElement.addEventListener("click", (event) => {
       if (count_checked == 0) {
         resetSelectionBtn.setAttribute("disabled", "disabled");
       }
-      sumProbabilities();
+      sumProbabilities(probabilities_for);
     }
   }
 
@@ -144,10 +163,10 @@ tilesElement.addEventListener("click", (event) => {
         parent_element.removeAttribute("tabindex");
       }
       if (probabilityCheckbox.checked) {
-        caclProbabilities();
+        caclProbabilities(probabilities_for);
       }
       if (sumProbabilitiesCheckbox.checked) {
-        sumProbabilities();
+        sumProbabilities(probabilities_for);
       }
     }
   }
@@ -162,7 +181,7 @@ tilesElement.addEventListener("keyup", (event) => {
   }
 });
 
-function sumProbabilities() {
+function sumProbabilities(for_player_id = null) {
   let sum = 0;
   tiles.forEach((tile) => {
     if (tile.querySelector(".tile-checkbox").checked) {
@@ -177,9 +196,10 @@ function sumProbabilities() {
   //   100
   // ).toFixed(2);
 
+  for_player_id = for_player_id ?? active_player_id;
   let diff = 1;
   for (
-    let i = remains_to_pull[active_player_id],
+    let i = remains_to_pull[for_player_id],
       m = tile_amount - sum,
       k = tile_amount;
     i > 0;
@@ -241,10 +261,10 @@ backBtn.addEventListener("click", () => {
     }
 
     if (probabilityCheckbox.checked) {
-      caclProbabilities();
+      caclProbabilities(probabilities_for);
     }
     if (sumProbabilitiesCheckbox.checked) {
-      sumProbabilities();
+      sumProbabilities(probabilities_for);
     }
   }
 });
@@ -267,7 +287,7 @@ function foo(hide = false) {
   });
 }
 
-function caclProbabilities() {
+function caclProbabilities(for_player_id = null) {
   if (tile_amount == 0) {
     tiles.forEach((tile) => {
       const tileProbability = tile.querySelector(".tile-probability span");
@@ -295,9 +315,10 @@ function caclProbabilities() {
       //   100
       // ).toFixed(2);
 
+      for_player_id = for_player_id ?? active_player_id;
       let diff = 1;
       for (
-        let i = remains_to_pull[active_player_id],
+        let i = remains_to_pull[for_player_id],
           m = tile_amount - tileCounter.textContent,
           k = tile_amount;
         i > 0;

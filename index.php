@@ -77,6 +77,14 @@ $tiles = [
             <option value="6">6</option>
           </select>
         </div>
+        <div class="control-item d-none">
+          <label for="probabilities_for">Показывать вероятности для: </label>
+          <select name="probabilities_for" id="probabilities_for">
+            <option value="-1">активного игрока</option>
+            <option value="0">1-ого игрока</option>
+            <option value="1">2-ого игрока</option>
+          </select>
+        </div>
         <div class="control-item d-none tooltips">
           <div class="active_player">Активный игрок: <span>1</span></div>
           <div class="tooltip-tile-probability-you tooltip">
