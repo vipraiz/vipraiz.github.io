@@ -14,6 +14,7 @@ const resetSelectionBtn = document.querySelector(".reset-selection-btn");
 const backBtn = document.querySelector(".back-btn");
 const tooltips = document.querySelector(".tooltips");
 const numPlayersElement = document.querySelector("#num_players");
+const activePlayerElement = document.querySelector(".active_player span");
 
 let num_of_tiles = 71;
 let remains_to_pull = [36, 35, 0, 0, 0, 0];
@@ -29,13 +30,15 @@ numPlayersElement.addEventListener("change", () => {
 });
 
 function bar() {
-  for(let i = 0; i < 6; i++) {
+  for (let i = 0; i < 6; i++) {
     if (i >= numOfPlayers) {
       remains_to_pull[i] = 0;
       continue;
     }
-    remains_to_pull[i] = Math.floor(num_of_tiles / numOfPlayers) + (i < num_of_tiles % numOfPlayers ? 1 : 0);
-  };
+    remains_to_pull[i] =
+      Math.floor(num_of_tiles / numOfPlayers) +
+      (i < num_of_tiles % numOfPlayers ? 1 : 0);
+  }
 }
 
 probabilityCheckbox.addEventListener("change", (event) => {
@@ -107,9 +110,11 @@ tilesElement.addEventListener("click", (event) => {
   if (tile.classList.contains("tile--over")) return;
 
   if (parent_element.classList.contains("tile-clickable")) {
-    if (tile_amount == num_of_tiles) {
-      backBtn.removeAttribute("disabled");
-    }
+    // if (tile_amount == num_of_tiles) {
+    //   backBtn.removeAttribute("disabled");
+    // }
+    backBtn.removeAttribute("disabled");
+    numPlayersElement.setAttribute("disabled", "disabled");
     if (tile_amount < num_of_tiles) {
       tile_last.classList.remove("tile--last");
     }
@@ -120,12 +125,14 @@ tilesElement.addEventListener("click", (event) => {
     if (tile_counter.textContent > 0) {
       tile_counter.textContent = tile_counter.textContent - 1;
       tileAmountElement.textContent = tile_amount -= 1;
-      // if (numOfPlayers % (active_player_id + 2)) {
-      //   active_player_id = 0;
-      // } else {
-      //   active_player_id++;
-      // }
-      // console.log(active_player_id);
+      remains_to_pull[active_player_id]--;
+      if (active_player_id < numOfPlayers - 1) {
+        active_player_id++;
+      } else {
+        active_player_id = 0;
+      }
+      activePlayerElement.textContent = active_player_id + 1;
+
       tile_counter.parentElement.classList.add("italic");
       const image = document.createElement("div");
       const name = tile.id.slice(-1);
@@ -165,10 +172,23 @@ function sumProbabilities() {
   summedProbability.parentNode.classList.remove("d-none");
   summedProbability.textContent =
     tile_amount > 0 ? ((sum / tile_amount) * 100).toFixed(2) : "0.00";
-  summedProbabilityYou.textContent = (
-    (1 - (numOfPlayers - 1) / (Math.pow(2, sum) + numOfPlayers - 2)) *
-    100
-  ).toFixed(2);
+  // summedProbabilityYou.textContent = (
+  //   (1 - (numOfPlayers - 1) / (Math.pow(2, sum) + numOfPlayers - 2)) *
+  //   100
+  // ).toFixed(2);
+
+  let diff = 1;
+  for (
+    let i = remains_to_pull[active_player_id],
+      m = tile_amount - sum,
+      k = tile_amount;
+    i > 0;
+    i--, k--, m--
+  ) {
+    diff *= m / k;
+  }
+
+  summedProbabilityYou.textContent = ((1 - diff) * 100).toFixed(2);
   summedProbability.parentNode.parentNode.setAttribute(
     "data-after",
     `${sum} ${declOfNum(sum, ["тайл", "тайла", "тайлов"])}`
@@ -191,9 +211,19 @@ backBtn.addEventListener("click", () => {
     if (tile_counter.textContent < max_value) {
       tile_counter.textContent = Number(tile_counter.textContent) + 1;
       tileAmountElement.textContent = tile_amount += 1;
-      // active_player_id -= 1;
+      if (active_player_id > 0) {
+        active_player_id--;
+      } else {
+        active_player_id = numOfPlayers - 1;
+      }
+      remains_to_pull[active_player_id]++;
+      activePlayerElement.textContent = active_player_id + 1;
+
       if (tile_amount == num_of_tiles) {
         backBtn.setAttribute("disabled", "disabled");
+      }
+      if (tile_amount == num_of_tiles) {
+        numPlayersElement.removeAttribute("disabled");
       }
       if (tile_counter.textContent == max_value) {
         tile_counter.parentElement.classList.remove("italic");
@@ -258,12 +288,26 @@ function caclProbabilities() {
         (tileCounter.textContent / tile_amount) *
         100
       ).toFixed(2);
-      tileProbabilityYou.textContent = (
-        (1 -
-          (numOfPlayers - 1) /
-            (Math.pow(2, tileCounter.textContent) + numOfPlayers - 2)) *
-        100
-      ).toFixed(2);
+      // tileProbabilityYou.textContent = (
+      //   (1 -
+      //     (numOfPlayers - 1) /
+      //       (Math.pow(2, tileCounter.textContent) + numOfPlayers - 2)) *
+      //   100
+      // ).toFixed(2);
+
+      let diff = 1;
+      for (
+        let i = remains_to_pull[active_player_id],
+          m = tile_amount - tileCounter.textContent,
+          k = tile_amount;
+        i > 0;
+        i--, k--, m--
+      ) {
+        diff *= m / k;
+      }
+
+      tileProbabilityYou.textContent = ((1 - diff) * 100).toFixed(2);
+      // tileProbabilityYou.textContent = (36 / num_of_tiles * 100).toFixed(2);
     });
   }
 }
